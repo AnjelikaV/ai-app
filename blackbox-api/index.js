@@ -121,6 +121,8 @@ const port = 3000; // You can change this to any port you prefer
 const blackboxAI = new BlackboxAI();
 
 app.use(cors());
+app.use(express.static('public'));
+app.use(express.json());
 
 // Define the API endpoint
 app.get('/api/blackbox', async (req, res) => {
