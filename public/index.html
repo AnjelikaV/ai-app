@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    <textarea id="messageInput" rows="4" cols="50" placeholder="Введите ваше сообщение..."></textarea><br>
+    <button id="sendButton">Отправить</button>
+    <h2>Ответ ИИ:</h2>
+    <pre id="responseOutput"></pre>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const text = document.getElementById('messageInput').value; // Получаем текст из текстового поля
+            const conversationId = "1"; // Уникальный идентификатор для беседы
+
+            fetch(`http://localhost:3000/api/blackbox?text=${encodeURIComponent(text)}&conversationId=${conversationId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data); // Выводим весь ответ
+                document.getElementById('responseOutput').textContent = data.response || 'Нет ответа'; // Отображаем ответ ИИ
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('responseOutput').textContent = 'Ошибка: ' + error.message; // Отображаем ошибку
+            });
+        });
+    </script>
+</body>
+</html>
